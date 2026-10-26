@@ -1,0 +1,5 @@
+# Talking-head silence mode — aggressive cuts
+mode: talking_head
+threshold_db: -35
+min_gap_seconds: 0.6
+pad_seconds: 0.15

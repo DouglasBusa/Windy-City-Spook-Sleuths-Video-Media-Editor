@@ -1,0 +1,6 @@
+# EVP session silence mode — mark gaps, never cut them
+mode: evp_session
+noise_floor_db: -45
+min_gap_seconds: 1.5
+question_window_seconds: 8
+protect_question_windows: true

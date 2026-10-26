@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Basic structure check
+        run: |
+          echo "Checking project structure..."
+          test -d docs || exit 1
+          test -f docs/ARCHITECTURE.md || exit 1
+          test -f docs/CUSTOMIZATION-ROADMAP.md || exit 1
+          test -f docs/adr/0001-weftcut-fork.md || exit 1
+          echo "Structure OK"
+      - name: Placeholder typecheck/lint
+        run: |
+          echo "Placeholder — add real checks when code lands"
+          exit 0
