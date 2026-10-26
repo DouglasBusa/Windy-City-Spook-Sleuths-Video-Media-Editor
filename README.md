@@ -10,6 +10,8 @@ Open-source, local-first AI-assisted video editor focused on:
 
 We are forking [WeftCut](https://github.com/WeftCut/WeftCut) as the foundation.
 
+**Confirmed fork:** [https://github.com/DouglasBusa/WeftCut](https://github.com/DouglasBusa/WeftCut)
+
 **Why WeftCut?**
 - MIT license (safe to fork and customize)
 - Full desktop NLE (timeline, keyframes, effects, captions, audio mixing)
@@ -27,21 +29,22 @@ We are forking [WeftCut](https://github.com/WeftCut/WeftCut) as the foundation.
 ## Current Status
 
 - Architecture document: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- WeftCut fork is being created under this account (check for DouglasBusa/WeftCut)
+- Customization roadmap: [docs/CUSTOMIZATION-ROADMAP.md](docs/CUSTOMIZATION-ROADMAP.md)
+- WeftCut fork: [https://github.com/DouglasBusa/WeftCut](https://github.com/DouglasBusa/WeftCut)
 - Specialized bots are already set up for this project
 
 ## Next Steps
 
-1. Complete the WeftCut fork and point this repo at it (or keep both linked)
+1. Phase 0 audit of the fork (license, MCP surface, extension points)
 2. Customize branding, add investigation + reel templates
 3. Connect the specialized bots via MCP
 4. Build first investigation rough-cut and reel export workflows
 
 ## How to run (once ready)
 
-1. Clone the fork
-2. Follow WeftCut setup (desktop install or build from source)
+1. Clone the fork: `git clone https://github.com/DouglasBusa/WeftCut.git`
+2. Follow WeftCut setup (desktop install from releases or build from source)
 3. Connect an MCP client / Grok bot
 4. Import footage → prompt for rough cut or reel → review in the timeline → export
 
-See `docs/ARCHITECTURE.md` for the full design.
+See `docs/ARCHITECTURE.md` and `docs/CUSTOMIZATION-ROADMAP.md` for the full design.
