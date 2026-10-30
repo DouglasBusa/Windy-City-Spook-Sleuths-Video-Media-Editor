@@ -1,11 +1,12 @@
 # ADR 0001 — Fork WeftCut as the editing core
 
-- **Status:** Proposed (pending Phase 0 verification)
-- **Date:** 2026-10-26
+- **Status:** Proposed (Phase 0 checks mostly complete; timeline export is a known gap)
+- **Date:** 2026-10-26 (updated 2026-10-29)
 - **Deciders:** Dougie (owner), Video Editor Architect
 - **Inputs:** Spook Sleuths Video Researcher (eval), Media Pipeline Coder (extension-point audit)
 - **Related:** `docs/ARCHITECTURE.md`, `docs/CUSTOMIZATION-ROADMAP.md`
 - **Fork:** https://github.com/DouglasBusa/WeftCut
+- **Upstream pin:** v0.5.3 / commit b159603
 
 ## Context
 We need a local-first, MCP-driven editing core for rough cuts of talking-head and investigation footage, plus Reels/TikTok output. Our plan has two tracks (investigation tools, social presets) that need custom silence modes, audio-event tags, digests, 9:16 reframing, captions, and batch export. The options are:
@@ -15,38 +16,38 @@ We need a local-first, MCP-driven editing core for rough cuts of talking-head an
 3. **Build our own** thin MCP server over ffmpeg + OpenTimelineIO.
 
 ## Decision
-**Recommend option 1, forking WeftCut**, as long as the Phase 0 checks below pass. Our features live in separate modules, plugins, or presets so the fork stays close to upstream and merges stay cheap.
+**Recommend option 1, forking WeftCut**, with the conditions below. Our features live in separate modules, plugins, or presets so the fork stays close to upstream and merges stay cheap.
 
-**Switch to option 2, wrapping, if any of these turn out to be true:**
-- WeftCut's own MCP tools and plugin hooks already cover what we need (silence, markers, export), so a fork adds upkeep without benefit.
-- Upstream is very active and changes core files often, so rebasing the fork would be expensive.
-- The license allows use but makes distributing modified copies a problem (for example copyleft terms we don't want to take on).
+**Phase 0 blocker status (as of 2026-10-29, based on b159603 / v0.5.3):**
+- License: CLEARED (MIT; keep notices; FFmpeg LGPL/GPL obligations apply to distributed builds).
+- Local-only core editing: CLEARED (editing, local whisper, pause detection, export are local; optional update check and cloud TTS are not required).
+- Editable timeline export (FCPXML/OTIO/EDL): OPEN GAP — video export + separate SRT/VTT only. Not a hard blocker for Phase 1; keep as roadmap item.
 
-**Fall back to option 3** if WeftCut can't run fully locally, has no usable license, is unmaintained, or can't export an editable timeline (FCPXML/OTIO/EDL).
+**Switch to option 2 or 3 only if** upstream becomes unmaintainable or we need full NLE interchange sooner than we can build it ourselves.
 
 ## Consequences
 **Positive:** faster start on the timeline and editing UI, MCP tooling already there, and features we can send back upstream.
-**Negative:** we take on the cost of tracking upstream, inherit any of its architectural limits, and depend on its license.
-**Mitigations:** keep the fork thin, keep an `upstream` remote, rebase monthly, put our code under `wcss/` modules, and keep presets in YAML.
+**Negative:** we take on the cost of tracking upstream, inherit any of its architectural limits, and depend on its license. No native NLE timeline export yet.
+**Mitigations:** keep the fork thin, keep an `upstream` remote, rebase monthly, put our code under `wcss/` modules, and keep presets in YAML. Plan an OTIO/FCPXML exporter later.
 
 ## Phase 0 exit criteria
 
 | # | Criterion | Owner | Status |
 |---|---|---|---|
-| 1 | License confirmed compatible with fork + distribution | Researcher | ⏳ Not verified |
-| 2 | Runs fully locally (no required cloud calls) | Researcher | ⏳ Not verified |
-| 3 | Upstream maintenance activity reviewed (recent commits/releases) | Researcher | ⏳ Not verified |
-| 4 | MCP tool inventory documented (`docs/eval/weftcut.md`) | Researcher | ⏳ Not started |
-| 5 | Extension points mapped (`docs/eval/weftcut-extension-points.md`) | Coder | ⏳ Not started |
-| 6 | Supports editable timeline export (FCPXML/OTIO/EDL) | Coder | ⏳ Not verified |
-| 7 | Fork created with `upstream` remote | Coder | ✅ Fork exists at DouglasBusa/WeftCut (upstream remote not yet confirmed) |
+| 1 | License confirmed compatible with fork + distribution | Researcher | ✅ Cleared (MIT + FFmpeg conditions) |
+| 2 | Runs fully locally (no required cloud calls) | Researcher | ✅ Cleared (core editing local) |
+| 3 | Upstream maintenance activity reviewed (recent commits/releases) | Researcher | ✅ Reviewed (active, single-maintainer) |
+| 4 | MCP tool inventory documented (`docs/eval/weftcut.md`) | Researcher | ✅ Done |
+| 5 | Extension points mapped (`docs/eval/weftcut-extension-points.md`) | Coder | ✅ Done |
+| 6 | Supports editable timeline export (FCPXML/OTIO/EDL) | Coder | ⚠️ Gap — video + SRT only |
+| 7 | Fork created with `upstream` remote | Coder | ✅ Fork exists (upstream remote still recommended) |
 | 8 | CI green on fork | Coder | ⏳ Not started |
-| 9 | One sample investigation clip round-trips (ingest, cut, export, open in NLE) | Coder | ⏳ Not started |
-| 10 | ADR status moved to Accepted | Architect + Dougie | ⏳ Waiting on 1–9 |
+| 9 | One sample investigation clip round-trips (ingest, cut, export, open in NLE) | Coder | ⏳ In progress |
+| 10 | ADR status moved to Accepted | Architect + Dougie | ⏳ Pending round-trip |
 
-**Accept when:** criteria 1–3 and 6 pass and 9 succeeds. If 1, 2, or 6 fails, revise this ADR to option 2 or 3.
+**Accept when:** criteria 1–5 pass and the round-trip (9) succeeds. Timeline export gap is accepted for now.
 
 ## Next actions
-1. Researcher: complete criteria 1–4.
-2. Coder: complete criteria 5–9.
-3. Architect: update this ADR with the findings and propose Accepted or a revised option.
+1. Complete the round-trip test with a short investigation clip.
+2. Commit collaboration patterns and start Phase 1 EVP-safe silence work.
+3. Update this ADR to Accepted once the round-trip succeeds.
